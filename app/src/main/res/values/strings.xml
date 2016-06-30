@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Locator</string>
+    <string name="title_activity_maps">Locator</string>
+    <string name="get_my_location">Get my location</string>
+    <string name="search">Search</string>
+    <string name="favourites">Favourites</string>
+    <string name="my_location">My Location</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title">Title</string>
+    <string name="title_activity_all_favourites">All Favourites</string>
+    <string name="title_activity_path">Path</string>
+</resources>

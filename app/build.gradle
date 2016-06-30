@@ -1,0 +1,45 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion "23.0.0"
+
+    defaultConfig {
+        applicationId "com.coppermobile.locator"
+        minSdkVersion 19
+        targetSdkVersion 23
+        versionCode 1
+        versionName "1.0"
+        multiDexEnabled true
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    testCompile 'junit:junit:4.12'
+    //    compile 'com.github.satyan:sugar:1.4'
+
+    //Sugar ORM Database
+
+    //ListView dialog used in FavouritesActivity
+
+    //FAB
+
+    //Picasso Images
+
+    compile 'com.android.support:appcompat-v7:23.4.0'
+    compile 'com.google.android.gms:play-services:9.2.0'
+    compile 'com.android.support:support-v4:23.4.0'
+    compile 'com.android.support:recyclerview-v7:23.4.0'
+    compile 'com.github.satyan:sugar:b16e65326a'
+    compile 'com.afollestad.material-dialogs:core:0.8.6.1'
+    compile 'com.oguzdev:CircularFloatingActionMenu:1.0.2'
+    compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.android.support:design:23.1.1'
+}

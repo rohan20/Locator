@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:locator="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/getMyLocation"
+        android:icon="@drawable/location"
+        android:title="@string/my_location"
+        locator:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/favourites"
+        android:icon="@android:drawable/btn_star_big_on"
+        android:title="@string/favourites"
+        locator:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/share"
+        android:icon="@android:drawable/ic_menu_share"
+        locator:showAsAction="ifRoom"
+        android:title="Share"
+        />
+
+</menu>

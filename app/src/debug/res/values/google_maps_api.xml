@@ -1,0 +1,19 @@
+<resources>
+    <!--
+    TODO: Before you run your application, you need a Google Maps API key.
+
+    To get one, follow this link, follow the directions and press "Create" at the end:
+
+    https://console.developers.google.com/flows/enableapi?apiid=maps_android_backend&keyType=CLIENT_SIDE_ANDROID&r=87:32:7F:10:BB:0E:4F:06:31:1F:16:3B:94:1F:86:0C:4B:C9:1C:D5%3Bcom.coppermobile.locator
+
+    You can also add your credentials to an existing key, using this line:
+    87:32:7F:10:BB:0E:4F:06:31:1F:16:3B:94:1F:86:0C:4B:C9:1C:D5;com.coppermobile.locator
+
+    Alternatively, follow the directions here:
+    https://developers.google.com/maps/documentation/android/start#get-key
+
+    Once you have your key (it starts with "AIza"), replace the "google_maps_key"
+    string in this file.
+    -->
+    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyDW51vXNMuDxJV8BmhpdV3DuyVhNtBiUfg</string>
+</resources>
