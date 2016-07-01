@@ -143,6 +143,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap.setOnMarkerClickListener(this);
         mMap.setOnMarkerDragListener(this);
 
+        if (position == null) {
+            //New Delhi
+            position = new LatLng(28.6139, 77.2090);
+            Toast.makeText(MapsActivity.this, "Default Location: New Delhi", Toast.LENGTH_SHORT).show();
+        }
+
         if (position != null) {
             Geocoder geocoder = new Geocoder(MapsActivity.this);
             try {
@@ -158,19 +164,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             marker = mMap.addMarker(new MarkerOptions().position(position).title(title).snippet(desc));
             marker.showInfoWindow();
+            marker.setDraggable(true);
             mMap.moveCamera(CameraUpdateFactory.newLatLng(position));
             mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
             return;
         }
 
-        //New Delhi
-        position = new LatLng(28.6139, 77.2090);
-        marker = mMap.addMarker(new MarkerOptions().position(position).title("New Delhi, India"));
-        marker.showInfoWindow();
-        marker.setDraggable(true);
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(position));
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(10));
-        Toast.makeText(MapsActivity.this, "Default Location: New Delhi", Toast.LENGTH_SHORT).show();
     }
 
     private void buildGoogleApiClient() {
