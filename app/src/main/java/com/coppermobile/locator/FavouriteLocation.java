@@ -2,11 +2,15 @@ package com.coppermobile.locator;
 
 import com.orm.SugarRecord;
 
+/**
+ * @author Rohan Taneja
+ * Favourites Model Class
+ */
 public class FavouriteLocation extends SugarRecord {
 
-    String title;
-    double latitude;
-    double longitude;
+    private String title;
+    private double latitude;
+    private double longitude;
 
     public FavouriteLocation(String title, double latitude, double longitude) {
         this.title = title;

@@ -7,7 +7,6 @@ import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.res.ResourcesCompat;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -23,13 +22,18 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+
+/**
+ * @author Rohan Taneja
+ *         This class displays all favourites on the map with markers.
+ */
 public class AllFavouritesActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
     private GoogleMap mMap;
-    String title;
-    String coordinates;
+    private String title;
+    private String coordinates;
 
-    ArrayList<FavouriteLocation> favourites;
+    private ArrayList<FavouriteLocation> favourites;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,24 +54,22 @@ public class AllFavouritesActivity extends FragmentActivity implements OnMapRead
         mMap = googleMap;
         mMap.setOnMarkerClickListener(this);
 
-        LatLngBounds INDIA = new LatLngBounds(
-                new LatLng(7.2, 67.8), new LatLng(36.5, 93.8));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(INDIA.getCenter(), 4));
-
-        Toast.makeText(AllFavouritesActivity.this, "favourites.size() = " + favourites.size(), Toast.LENGTH_SHORT).show();
+        LatLngBounds WORLD = new LatLngBounds(
+                new LatLng(25.393661, -136.230469), new LatLng(30.968189, 157.324219));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(WORLD.getCenter(), 1));
 
         addMarkers();
 
     }
 
 
-    public void addMarkers() {
+    private void addMarkers() {
 
         if (mMap != null) {
-            for (int i = 0; i < favourites.size(); i++) {
-                title = favourites.get(i).getTitle();
-                coordinates = "Lat: " + String.valueOf(favourites.get(i).getLatitude()).substring(0, 5) + " Lng: " + String.valueOf(favourites.get(i).getLongitude()).substring(0, 5);
-                LatLng location = new LatLng(favourites.get(i).getLatitude(), favourites.get(i).getLongitude());
+            for (FavouriteLocation favouriteLocation : favourites) {
+                title = favouriteLocation.getTitle();
+                coordinates = "Lat: " + String.valueOf(favouriteLocation.getLatitude()).substring(0, 5) + " Lng: " + String.valueOf(favouriteLocation.getLongitude()).substring(0, 5);
+                LatLng location = new LatLng(favouriteLocation.getLatitude(), favouriteLocation.getLongitude());
 
                 int height = 150;
                 int width = 150;
@@ -83,7 +85,7 @@ public class AllFavouritesActivity extends FragmentActivity implements OnMapRead
                 Geocoder geocoder = new Geocoder(AllFavouritesActivity.this);
                 List<Address> address = null;
                 try {
-                    address = geocoder.getFromLocation(favourites.get(i).getLatitude(), favourites.get(i).getLongitude(), 1);
+                    address = geocoder.getFromLocation(favouriteLocation.getLatitude(), favouriteLocation.getLongitude(), 1);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

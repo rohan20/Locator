@@ -8,12 +8,15 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,8 +25,13 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -35,26 +43,30 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * @author Rohan Taneja
+ *         App opens up to this activity. Displays default location as New Delhi.
+ */
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener, GoogleMap.OnMarkerDragListener, View.OnClickListener {
 
     private GoogleMap mMap;
 
     private GoogleApiClient mGoogleApiClient;
 
-    LatLng position;
+    private LatLng position;
 
-    Menu mapsActivityMenu;
+    private Menu mapsActivityMenu;
 
-    Marker marker;
+    private Marker marker;
 
-    android.support.design.widget.FloatingActionButton mSearchFloatingActionButton;
+    private android.support.design.widget.FloatingActionButton mSearchFloatingActionButton;
 
-    List<Address> address;
+    private List<Address> address;
 
-    double latitude;
-    double longitude;
+    private double latitude;
+    private double longitude;
 
-    Location currentLocationShare;
+    private Location currentLocationShare;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,12 +88,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     }
 
-    public void initialize() {
+    private void initialize() {
         mSearchFloatingActionButton = (android.support.design.widget.FloatingActionButton) findViewById(R.id.searchFloatingActionButton);
         mSearchFloatingActionButton.setOnClickListener(this);
         buildGoogleApiClient();
     }
-
 
     public boolean onCreateOptionsMenu(final Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -154,8 +165,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             try {
                 address = geocoder.getFromLocation(position.latitude, position.longitude, 1);
             } catch (IOException e) {
-                e.printStackTrace();
+
             }
+
+            if (address.size() == 0)
+                return;
 
             String title = address.get(0).getAddressLine(0);
             String desc = address.get(0).getAddressLine(1);
@@ -178,6 +192,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             mGoogleApiClient = new GoogleApiClient.Builder(this)
                     .addApi(LocationServices.API)
                     .build();
+
         }
     }
 
@@ -193,19 +208,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onStop();
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case 0:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-
-                    getLocation();
-                }
-        }
-    }
-
     //launch alert to enable GPS
-    public void buildAlertMessageNoGps() {
+    private void buildAlertMessageNoGps() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("Your GPS seems to be disabled, do you want to enable it?")
                 .setCancelable(false)
@@ -228,14 +232,28 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
-            ActivityCompat.requestPermissions(MapsActivity.this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, 0);
+            int hasCoarseLocationPermission = ContextCompat.checkSelfPermission(MapsActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION);
 
-            Toast.makeText(MapsActivity.this, "No Permission", Toast.LENGTH_SHORT).show();
-            return;
+            if (Build.VERSION.SDK_INT >= 23) {
+
+                if (hasCoarseLocationPermission != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(MapsActivity.this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, Constants.REQUEST_CODE_ACCESS_COARSE_LOCATION);
+                    return;
+                }
+            }
+
+            int hasFineLocationPermission = ContextCompat.checkSelfPermission(MapsActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION);
+
+            if (Build.VERSION.SDK_INT >= 23) {
+
+                if (hasFineLocationPermission != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(MapsActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, Constants.REQUEST_CODE_ACCESS_FINE_LOCATION);
+                    return;
+                }
+            }
         }
 
         Location mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-
 
         if (mLastLocation == null) {
 
@@ -255,7 +273,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         longitude = mLastLocation.getLongitude();
     }
 
-    public void displayLocation() {
+    private void displayLocation() {
         position = new LatLng(latitude, longitude);
 
         Geocoder geocoder = new Geocoder(MapsActivity.this);
@@ -265,20 +283,24 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             e.printStackTrace();
         }
 
+        if (address.size() == 0)
+            return;
+
         String title = address.get(0).getAddressLine(0);
         String desc = address.get(0).getAddressLine(1);
         if (address.get(0).getAddressLine(2) != null)
             desc += " " + address.get(0).getAddressLine(2);
 
+        mMap.clear();
         marker = mMap.addMarker(new MarkerOptions().position(position).title(title).snippet(desc));
         marker.showInfoWindow();
         mMap.moveCamera(CameraUpdateFactory.newLatLng(position));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
     }
 
-
     @Override
     public boolean onMarkerClick(Marker marker) {
+
 
         AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this);
         LayoutInflater inflater = this.getLayoutInflater();
@@ -339,10 +361,68 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         switch (v.getId()) {
 
             case R.id.searchFloatingActionButton:
-                Intent i = new Intent(MapsActivity.this, SearchActivity.class);
-                startActivity(i);
+//                Intent i = new Intent(MapsActivity.this, SearchActivity.class);
+//                startActivity(i);
+
+                try {
+                    Intent intent =
+                            new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN)
+                                    .build(this);
+                    startActivityForResult(intent, Constants.PLACE_AUTOCOMPLETE_REQUEST_CODE);
+                } catch (GooglePlayServicesRepairableException e) {
+                    Toast.makeText(MapsActivity.this, "GooglePlayServicesRepairableException", Toast.LENGTH_SHORT).show();
+                } catch (GooglePlayServicesNotAvailableException e) {
+                    Toast.makeText(MapsActivity.this, "GooglePlayServicesNotAvailableException", Toast.LENGTH_SHORT).show();
+                }
+
                 break;
         }
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == Constants.PLACE_AUTOCOMPLETE_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+
+                Place place = PlaceAutocomplete.getPlace(this, data);
+
+                latitude = place.getLatLng().latitude;
+                longitude = place.getLatLng().longitude;
+                displayLocation();
+
+
+            } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
+
+                Status status = PlaceAutocomplete.getStatus(this, data);
+
+            } else if (resultCode == RESULT_CANCELED) {
+                // The user canceled the operation.
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case Constants.REQUEST_CODE_ACCESS_COARSE_LOCATION:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                } else {
+                    Toast.makeText(MapsActivity.this, "Requires Location permission", Toast.LENGTH_SHORT).show();
+                }
+                break;
+
+            case Constants.REQUEST_CODE_ACCESS_FINE_LOCATION:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                } else {
+                    Toast.makeText(MapsActivity.this, "Requires Location permission", Toast.LENGTH_SHORT).show();
+                }
+                break;
+
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
     }
 }

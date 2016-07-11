@@ -12,11 +12,15 @@ import android.view.MenuItem;
 
 import java.util.ArrayList;
 
+/**
+ * @author Rohan Taneja
+ * Displays the list of all favourites
+ */
 public class FavouritesActivity extends AppCompatActivity {
 
-    RecyclerView mRecyclerView;
-    ArrayList<FavouriteLocation> mFavs;
-    FavouritesArrayAdapter adapter;
+    private RecyclerView mRecyclerView;
+    private ArrayList<FavouriteLocation> mFavs;
+    private FavouritesArrayAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

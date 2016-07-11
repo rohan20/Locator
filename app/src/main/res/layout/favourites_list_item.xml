@@ -8,10 +8,10 @@
         android:id="@+id/favouritesTitle"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_margin="@dimen/margin_5"
         android:gravity="start|center_vertical"
-        android:padding="4dp"
+        android:padding="@dimen/padding_4"
         android:text="England"
-        android:layout_margin="5dp"
-        android:textSize="20sp" />
+        android:textSize="@dimen/textSize_20" />
 
 </LinearLayout>

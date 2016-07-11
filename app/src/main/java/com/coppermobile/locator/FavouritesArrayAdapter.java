@@ -13,10 +13,14 @@ import com.afollestad.materialdialogs.MaterialDialog;
 
 import java.util.ArrayList;
 
+/**
+ * @author Rohan Taneja
+ * Array Adapter for favourite locations.
+ */
 public class FavouritesArrayAdapter extends RecyclerView.Adapter<FavouritesArrayAdapter.ViewHolder> {
 
-    Context mContext;
-    ArrayList<FavouriteLocation> mFavourites;
+    private Context mContext;
+    private ArrayList<FavouriteLocation> mFavourites;
 
     public FavouritesArrayAdapter(Context context, ArrayList<FavouriteLocation> favourites) {
         mContext = context;

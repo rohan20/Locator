@@ -56,7 +56,6 @@
         <activity
             android:name=".AllFavouritesActivity"
             android:label="@string/title_activity_all_favourites" />
-        <activity android:name=".SearchActivity"></activity>
     </application>
 
 </manifest>
