@@ -16,7 +16,7 @@
 
     <item
         android:id="@+id/share"
-        android:icon="@android:drawable/ic_menu_share"
+        android:icon="@drawable/ic_share_white_36dp"
         locator:showAsAction="ifRoom"
         android:title="Share"
         />

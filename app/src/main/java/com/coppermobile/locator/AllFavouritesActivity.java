@@ -55,8 +55,8 @@ public class AllFavouritesActivity extends FragmentActivity implements OnMapRead
         mMap.setOnMarkerClickListener(this);
 
         LatLngBounds WORLD = new LatLngBounds(
-                new LatLng(25.393661, -136.230469), new LatLng(30.968189, 157.324219));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(WORLD.getCenter(), 1));
+                new LatLng(36.7783, -119.4179), new LatLng(36.8485, 174.7633));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(WORLD.getCenter(), 0));
 
         addMarkers();
 
@@ -71,16 +71,16 @@ public class AllFavouritesActivity extends FragmentActivity implements OnMapRead
                 coordinates = "Lat: " + String.valueOf(favouriteLocation.getLatitude()).substring(0, 5) + " Lng: " + String.valueOf(favouriteLocation.getLongitude()).substring(0, 5);
                 LatLng location = new LatLng(favouriteLocation.getLatitude(), favouriteLocation.getLongitude());
 
-                int height = 150;
-                int width = 150;
-                BitmapDrawable bitmapdraw = (BitmapDrawable) ResourcesCompat.getDrawable(getResources(), R.drawable.favlocation, null);
-                Bitmap b = null;
-                if (bitmapdraw != null) {
-                    b = bitmapdraw.getBitmap();
-                }
-
-                Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
-
+//                int height = 150;
+//                int width = 150;
+//                BitmapDrawable bitmapdraw = (BitmapDrawable) ResourcesCompat.getDrawable(getResources(), R.drawable.favlocation, null);
+//                Bitmap b = null;
+//                if (bitmapdraw != null) {
+//                    b = bitmapdraw.getBitmap();
+//                }
+//
+//                Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
+//
 
                 Geocoder geocoder = new Geocoder(AllFavouritesActivity.this);
                 List<Address> address = null;
@@ -100,7 +100,8 @@ public class AllFavouritesActivity extends FragmentActivity implements OnMapRead
                         desc += " " + address.get(0).getAddressLine(2);
                 }
 
-                Marker marker = mMap.addMarker(new MarkerOptions().position(location).title(title).snippet(desc).icon(BitmapDescriptorFactory.fromBitmap(smallMarker)));
+//                Marker marker = mMap.addMarker(new MarkerOptions().position(location).title(title).snippet(desc).icon(BitmapDescriptorFactory.fromBitmap(smallMarker)));
+                Marker marker = mMap.addMarker(new MarkerOptions().position(location).title(title).snippet(desc));
                 marker.showInfoWindow();
             }
 
